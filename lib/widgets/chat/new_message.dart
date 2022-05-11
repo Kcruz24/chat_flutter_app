@@ -15,11 +15,13 @@ class _NewMessageWidgetState extends State<NewMessageWidget> {
     FocusScope.of(context).unfocus();
 
     final user = await FirebaseAuth.instance.currentUser();
+    final userData = await Firestore.instance.collection('users').document(user.uid).get();
 
     final chatBody = {
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,
+      'username': userData['username'],
     };
     Firestore.instance.collection('chat').add(chatBody);
 
