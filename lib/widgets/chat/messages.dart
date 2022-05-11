@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'message_bubble.dart';
@@ -6,27 +7,44 @@ import 'message_bubble.dart';
 class MessagesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection('chat')
-          .orderBy(
-            'createdAt',
-            descending: true,
-          )
-          .snapshots(),
-      builder: (ctx, chatSnapshot) {
-        if (chatSnapshot.connectionState == ConnectionState.waiting) {
+    return FutureBuilder(
+      future: FirebaseAuth.instance
+          .currentUser(), // When this future is resolved ⬇️
+      builder: (ctx, futureSnapshot) {
+        // The builder will execute
+        if (futureSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-        final chatDocs = chatSnapshot.data.documents;
-        return ListView.builder(
-          reverse: true,
-          itemCount: chatDocs.length,
-          itemBuilder: (ctx, index) => MessageBubbleWidget(
-            chatDocs[index]['text'],
-          ),
+
+        return StreamBuilder(
+          stream: Firestore.instance
+              .collection('chat')
+              .orderBy(
+                'createdAt',
+                descending: true,
+              )
+              .snapshots(),
+          builder: (ctx, chatSnapshot) {
+            if (chatSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            final chatDocs = chatSnapshot.data.documents;
+            return ListView.builder(
+              reverse: true,
+              itemCount: chatDocs.length,
+              itemBuilder: (ctx, index) => MessageBubbleWidget(
+                chatDocs[index]['text'],
+                chatDocs[index]['userId'] == futureSnapshot.data.uid,
+                key: ValueKey(chatDocs[index]
+                    .documentID), // This ensures that flutter will always be able to efficiently re-render and update the list.
+              ),
+            );
+          },
         );
       },
     );
