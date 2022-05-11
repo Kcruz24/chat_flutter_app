@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AuthFormWidget extends StatefulWidget {
+  AuthFormWidget(this.submitFn);
+
+  final void Function(
+    String email,
+    String password,
+    String userName,
+    bool isLogin,
+  ) submitFn;
+
   @override
   State<AuthFormWidget> createState() => _AuthFormWidgetState();
 }
@@ -22,6 +31,13 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
       print(_userEmail);
       print(_userName);
       print(_userPassword);
+
+      widget.submitFn(
+        _userEmail,
+        _userName,
+        _userPassword,
+        _isLogin,
+      );
       // Use those values to send our auth request ...
     }
   }
@@ -56,21 +72,21 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     },
                   ),
                   if (!_isLogin)
-                  TextFormField(
-                    key: ValueKey('username'),
-                    validator: (value) {
-                      if (value.isEmpty || value.length < 4) {
-                        return 'Please enter at least 4 characters';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Username',
+                    TextFormField(
+                      key: ValueKey('username'),
+                      validator: (value) {
+                        if (value.isEmpty || value.length < 4) {
+                          return 'Please enter at least 4 characters';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                      ),
+                      onSaved: (value) {
+                        _userName = value;
+                      },
                     ),
-                    onSaved: (value) {
-                      _userName = value;
-                    },
-                  ),
                   TextFormField(
                     key: ValueKey('password'),
                     validator: (value) {
@@ -95,7 +111,9 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                   ),
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
-                    child: Text(_isLogin ? 'Create new account' : 'I already have an account'),
+                    child: Text(_isLogin
+                        ? 'Create new account'
+                        : 'I already have an account'),
                     onPressed: () {
                       setState(() {
                         _isLogin = !_isLogin;
