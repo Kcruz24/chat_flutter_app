@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AuthFormWidget extends StatefulWidget {
-  AuthFormWidget(this.submitFn);
+  AuthFormWidget(this.submitFn, this.isLoading);
 
+  final bool isLoading;
   final void Function(
     String email,
     String password,
@@ -106,22 +107,25 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     },
                   ),
                   SizedBox(height: 12),
-                  RaisedButton(
-                    child: Text(_isLogin ? 'Login' : 'SignUp'),
-                    onPressed:
-                        _trySubmit, // Passed like this to be activated when the button is pressed by the user.
-                  ),
-                  FlatButton(
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text(_isLogin
-                        ? 'Create new account'
-                        : 'I already have an account'),
-                    onPressed: () {
-                      setState(() {
-                        _isLogin = !_isLogin;
-                      });
-                    },
-                  ),
+                  if (widget.isLoading) CircularProgressIndicator(),
+                  if (!widget.isLoading)
+                    RaisedButton(
+                      child: Text(_isLogin ? 'Login' : 'SignUp'),
+                      onPressed:
+                          _trySubmit, // Passed like this to be activated when the button is pressed by the user.
+                    ),
+                  if (!widget.isLoading)
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text(_isLogin
+                          ? 'Create new account'
+                          : 'I already have an account'),
+                      onPressed: () {
+                        setState(() {
+                          _isLogin = !_isLogin;
+                        });
+                      },
+                    ),
                 ],
               ),
             ),
