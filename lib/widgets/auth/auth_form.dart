@@ -38,7 +38,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus(); // Close the keyboard always
 
-    if (_userImageFile == null) {
+    if (_userImageFile == null && !_isLogin) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Please pick an image.'),
@@ -50,7 +50,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     }
 
     // If we are signing up we should check and validate the image.
-    if (isValid && _userImageFile != null) {
+    if (isValid) {
       _formKey.currentState.save();
       print(_userEmail);
       print(_userName);
