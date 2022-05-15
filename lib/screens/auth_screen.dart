@@ -49,10 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = false;
       });
 
-      final userInfo = {
-        'username': username,
-        'email': email,
-      };
+
 
       // Uploading to firebase storage
       final ref = FirebaseStorage.instance
@@ -63,10 +60,19 @@ class _AuthScreenState extends State<AuthScreen> {
       // "onComplete" - converts this into a future
       await ref.putFile(image).onComplete;
 
+      final url = await ref.getDownloadURL();
+
+      final userInfo = {
+        'username': username,
+        'email': email,
+        'image_url': url,
+      };
+
       await Firestore.instance
           .collection('users')
           .document(authResult.user.uid)
           .setData(userInfo);
+          
     } on PlatformException catch (err) {
       var message = 'A error ocurred, please check your credentials!';
 
