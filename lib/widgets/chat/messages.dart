@@ -40,6 +40,7 @@ class MessagesWidget extends StatelessWidget {
               itemBuilder: (ctx, index) => MessageBubbleWidget(
                 chatDocs[index]['text'],
                 chatDocs[index]['username'],
+                chatDocs[index]['userImage'],
                 chatDocs[index]['userId'] == futureSnapshot.data.uid,
                 key: ValueKey(chatDocs[index]
                     .documentID), // This ensures that flutter will always be able to efficiently re-render and update the list.

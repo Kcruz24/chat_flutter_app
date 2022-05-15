@@ -22,6 +22,7 @@ class _NewMessageWidgetState extends State<NewMessageWidget> {
       'createdAt': Timestamp.now(),
       'userId': user.uid,
       'username': userData['username'],
+      'userImage': userData['image_url'],
     };
     Firestore.instance.collection('chat').add(chatBody);
 
