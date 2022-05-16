@@ -13,6 +13,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // This is for iOS push notifications
   @override
   void initState() {
+    super.initState();
     final fbm = FirebaseMessaging();
     fbm.requestNotificationPermissions();
     fbm.configure(onMessage: (msg) {
@@ -28,7 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // fbm.getToken(); // Get device token
     fbm.subscribeToTopic('chat'); // Any notifications to such topic will reach this device.
-    super.initState();
   }
 
   @override
@@ -38,6 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text('FlutterChat'),
         actions: <Widget>[
           DropdownButton(
+            underline: Container(),
             icon: Icon(
               Icons.more_vert,
               color: Theme.of(context).primaryIconTheme.color,
