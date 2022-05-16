@@ -25,6 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
       print('MESSAGE ON RESUME: $msg');
       return;
     });
+
+    // fbm.getToken(); // Get device token
+    fbm.subscribeToTopic('chat'); // Any notifications to such topic will reach this device.
     super.initState();
   }
 
