@@ -10,13 +10,21 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   // This is for iOS push notifications
   @override
   void initState() {
     final fbm = FirebaseMessaging();
     fbm.requestNotificationPermissions();
-    fbm.configure();
+    fbm.configure(onMessage: (msg) {
+      print('MESSAGE ON FOREGROUND: $msg');
+      return;
+    }, onLaunch: (msg) {
+      print('MESSAGE ON LAUNCH: $msg');
+      return;
+    }, onResume: (msg) {
+      print('MESSAGE ON RESUME: $msg');
+      return;
+    });
     super.initState();
   }
 
@@ -58,7 +66,8 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            Expanded( // Take as much space as available
+            Expanded(
+              // Take as much space as available
               child: MessagesWidget(),
             ),
             NewMessageWidget(),
